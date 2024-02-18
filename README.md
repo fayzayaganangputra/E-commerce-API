@@ -22,24 +22,36 @@ Setelah konfigurasi selesai, jalankan server proyek "npm start". Server akan mul
 Uji API dapat menggunakan perangkat lunak seperti Postman untuk menguji API E-commerce yang telah diinstal.
 
 **Endpoints**
+
 **Manajemen Produk**
+
 GET /products: Mendapatkan daftar semua produk.
+
 POST /products: Menambahkan produk baru.
+
 DELETE /products/:id: Menghapus produk berdasarkan ID.
 
 **Manajemen Akun Pengguna**
+
 POST /users: Mendaftar pengguna baru.
+
 POST /login: Masuk ke akun pengguna.
+
 GET /users: Mendapatkan profil pengguna.
 
 **Keranjang Belanja**
 GET /cart/:user_id: Mendapatkan isi keranjang belanja pengguna.
+
 POST /cart/add: Menambahkan produk ke keranjang belanja.
+
 DELETE /cart/items/:id: Menghapus produk dari keranjang belanja.
+
 POST /orders: Melakukan proses checkout dan membuat pesanan.
 
 **Pemrosesan Pembayaran**
+
 POST /orders/pay: Memproses pembayaran pesanan.
 
 **Fungsi Pencarian**
+
 GET /products/search: Mencari produk berdasarkan kata kunci.
