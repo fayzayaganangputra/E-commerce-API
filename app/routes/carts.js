@@ -83,13 +83,18 @@ router.post(
 );
 
 // Route untuk menghapus item dari keranjang belanja pengguna
-router.delete("/cart/:cart_id/item/:item_id", async (req, res) => {
-  const { cart_id, item_id } = req.params;
+router.delete("/cart/items/:id", async (req, res) => {
+  const cartId = Number(req.params.id);
   try {
-   
-    const [results] = await db.execute(
-      "DELETE FROM Cart_Items WHERE cart_id = ? AND id = ?",
-      [cart_id, item_id]
+   const [cart] = await db.query("SELECT * FROM products WHERE id = ?", [
+     cartId
+   ]);
+   if (!cart) {
+     return res.status(404).json({ message: "cart not found" });
+   }
+   await db.execute(
+      "DELETE FROM cart_Items WHERE id = ?",
+      [Number(cartId)]
     );
     
     res.json({ message: "Item deleted from cart successfully" });
