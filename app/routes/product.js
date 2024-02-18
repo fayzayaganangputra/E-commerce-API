@@ -30,4 +30,28 @@ router.post("/products", authorizePermission(Permission.ADD_PRODUCT), async (req
   }
 });
 
+router.get("/products/search", async (req, res) => {
+  try {
+    const { name, category } = req.query;
+
+    // Membangun kondisi query berdasarkan parameter yang diberikan
+    let query = `SELECT * FROM products WHERE 1=1`;
+    if (name) {
+      query += ` AND name LIKE '%${name}%'`;
+    }
+    if (category) {
+      query += ` AND category_id = ${Number(category)}`;
+    }
+
+    // Eksekusi query ke database
+    const [results] = await db.query(query);
+
+    // Kirim hasil pencarian ke klien
+    res.json(results);
+  } catch (error) {
+    console.error("Error searching products:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 export default router;
