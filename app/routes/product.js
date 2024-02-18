@@ -1,6 +1,6 @@
 import { Router } from "express";
 import db from "../../config/database.js";
-import { authorizePermission } from "../middleware.js";
+import { authorizePermission, validateToken } from "../middleware.js";
 import { Permission } from "../autorization.js";
 const router = Router();
 
@@ -30,11 +30,31 @@ router.post("/products", authorizePermission(Permission.ADD_PRODUCT), async (req
   }
 });
 
+router.delete("/products/:id", async (req, res) => {
+  try {
+    const productId = Number(req.params.id);
+
+    // Periksa apakah produk dengan ID yang diberikan ada dalam database
+    const [product] = await db.query("SELECT * FROM products WHERE id = ?", [productId]);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    // Hapus produk dari database
+    await db.query("DELETE FROM products WHERE id = ?", [Number(productId)]);
+
+    res.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 router.get("/products/search", async (req, res) => {
   try {
     const { name, category } = req.query;
 
-    // Membangun kondisi query berdasarkan parameter yang diberikan
+    //kondisi query berdasarkan parameter yang diberikan
     let query = `SELECT * FROM products WHERE 1=1`;
     if (name) {
       query += ` AND name LIKE '%${name}%'`;
